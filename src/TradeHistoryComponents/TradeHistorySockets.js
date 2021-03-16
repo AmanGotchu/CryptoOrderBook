@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import TradeHistoryRow from './TradeHistoryRow';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 import '../App.css';
 
 import {getProducts} from '../coinbase_api/MarketCollector';
@@ -16,36 +18,39 @@ class TradeHistorySockets extends React.Component {
     super(props);
     this.state = {
         anchorEl: null,
-        products: [],
         tradeData: [],
         productLoading: true,
         tradeHistoryLoading: true,
-        selectedProduct: "BTC-USD",
+        selectedProduct: "",
+        searchInput: "",
         lastUpdate: "",
-        interval: null
+        interval: null,
     }
 
     this.menuItems = [];
+    this.products = []
 
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.switchProduct = this.switchProduct.bind(this);
-    this.test = this.test.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
 
   async componentDidMount() {
-    this.menuItems = await getProducts()
+    this.products = await getProducts()
     .then((res) => {
-        return res.data.map((product) => {
-            return (
-                <MenuItem onClick={() => this.switchProduct(product.id)} key={product.id} style={{ width: 300 }}>
-                    {product.id}
-                </MenuItem>
-            );
-        })
+        return res.data;
     })
     .catch((err) => {
         console.log(err);
+    })
+
+    this.menuItems = this.products.map((product) => {
+        return (
+            <MenuItem onClick={() => this.switchProduct(product.id)} key={product.id} style={{ width: 300 }}>
+                {product.id}
+            </MenuItem>
+        );
     })
 
     client.onopen = async () => {
@@ -103,6 +108,9 @@ class TradeHistorySockets extends React.Component {
   }
 
   switchProduct(pair) {
+    if(pair == null || pair == "") {
+        return;
+    }
     if(this.state.selectedProduct != null) {
         client.send(JSON.stringify({
             "type": "unsubscribe",
@@ -120,10 +128,6 @@ class TradeHistorySockets extends React.Component {
     this.setState({ selectedProduct: pair, tradeData: [], anchorEl: null });
   }
 
-  test() {
-      console.log("WTF");
-  }
-
   handleClick(event) {
     this.setState({ anchorEl: event.currentTarget });
   }
@@ -132,12 +136,31 @@ class TradeHistorySockets extends React.Component {
     this.setState({ anchorEl: null });
   }
 
+  onSearchChange(evt, product) {
+    console.log(evt);
+    this.switchProduct(product.id)
+  }
+
   render() {
     return (
       <div style={styles.containerStyle}>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%", backgroundColor: "#d4d4d4", borderRadius: 0 }}>
-            {this.state.selectedProduct || "Open Menu"}
-          </Button>
+          <div style={styles.searchBar}>
+            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: 250, backgroundColor: "#d4d4d4", borderRadius: 0 }}>
+                {this.state.selectedProduct || "Open Menu"}
+            </Button>
+
+            <Autocomplete 
+                style={{ display: "flex", width: 250, height: "90%", border: 0, paddingRight: 10 }} 
+                id="combo-box-demo"
+                options={this.products}
+                getOptionLabel={(product) => product.id}
+                renderInput={(params) => <TextField {...params} label="Crypto Pairs" />}
+                inputValue={this.state.searchInput}
+                onChange={this.onSearchChange}
+                onInputChange={(evt, val) => this.setState({ searchInput: val })}
+                />
+          </div>
+          
           <Menu
             id="simple-menu"
             anchorEl={this.state.anchorEl}
@@ -179,6 +202,12 @@ const styles = {
         alignItems: "center",
         border: "1px solid #ededed",
         zIndex: 1
+    },
+    searchBar: {
+        display: "flex",
+        width: "100%",
+        height: 50,
+        justifyContent: "space-between"
     }
 }
 
