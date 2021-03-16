@@ -62,7 +62,7 @@ class TradeHistorySockets extends React.Component {
                 minutes.padStart(2, "0");
 
                 var seconds = tradeTime.getSeconds() + "";
-                seconds.padStart(2, "0");
+                seconds = seconds.padStart(2, "0");
 
                 const tradeString = hours + ":" + minutes + ":" + seconds;
 
