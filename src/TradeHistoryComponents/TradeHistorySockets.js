@@ -56,10 +56,10 @@ class TradeHistorySockets extends React.Component {
             if(messageJSON.type == "match") {
                 const tradeTime = new Date(messageJSON.time);
                 var hours = tradeTime.getHours() + "";
-                hours.padStart(2, "0");
+                hours = hours.padStart(2, "0");
 
                 var minutes = tradeTime.getMinutes() + "";
-                minutes.padStart(2, "0");
+                minutes = minutes.padStart(2, "0");
 
                 var seconds = tradeTime.getSeconds() + "";
                 seconds = seconds.padStart(2, "0");
@@ -135,7 +135,7 @@ class TradeHistorySockets extends React.Component {
   render() {
     return (
       <div style={styles.containerStyle}>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%", backgroundColor: "#d4d4d4" }}>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%", backgroundColor: "#d4d4d4", borderRadius: 0 }}>
             {this.state.selectedProduct || "Open Menu"}
           </Button>
           <Menu
@@ -152,7 +152,7 @@ class TradeHistorySockets extends React.Component {
             tradeSize={"Trade Size"}
             tradePrice={"Trade Price"}
             tradeTime={"Trade Time"}
-            style={{ backgroundColor: "#ededed" }}
+            style={{ backgroundColor: "#ededed", zIndex: -1 }}
         />
         <div style={{
             display: "flex",
@@ -177,6 +177,8 @@ const styles = {
         width: "60%",
         flexDirection: "column",
         alignItems: "center",
+        border: "1px solid #ededed",
+        zIndex: 1
     }
 }
 
