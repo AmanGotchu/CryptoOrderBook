@@ -9,7 +9,7 @@ import '../App.css';
 import {getProducts} from '../coinbase_api/MarketCollector';
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket('ws://ws-feed.pro.coinbase.com');
+const client = new W3CWebSocket('wss://ws-feed.pro.coinbase.com');
 
 class TradeHistorySockets extends React.Component {
   constructor(props) {
