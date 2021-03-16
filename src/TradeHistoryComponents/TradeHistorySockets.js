@@ -125,8 +125,6 @@ class TradeHistorySockets extends React.Component {
   }
 
   render() {
-    
-
     return (
       <div style={styles.containerStyle}>
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%" }}>
@@ -147,7 +145,17 @@ class TradeHistorySockets extends React.Component {
             tradePrice={"Trade Price"}
             tradeTime={"Trade Time"}
         />
-        {this.state.tradeData}
+        <div style={{
+            display: "flex",
+            height: "100%",
+            width: "100%",
+            flexDirection: "column",
+            alignItems: "center",
+            overflowY: "scroll"
+        }}
+            className="history">
+            {this.state.tradeData}
+        </div>
       </div>
     );
   }
@@ -160,7 +168,6 @@ const styles = {
         width: "60%",
         flexDirection: "column",
         alignItems: "center",
-        overflowY: "scroll"
     }
 }
 

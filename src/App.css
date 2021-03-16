@@ -54,3 +54,5 @@
 .buttonWidth {
   background-color: green;
 }
+
+.history::-webkit-scrollbar {display:none;}
