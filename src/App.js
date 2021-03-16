@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 // eslint-disable-next-line no-undef
 // var Buffer = require('buffer/');
-import getProducts from './coinbase_api/MarketCollector';
+// import TradeHistory from './TradeHistoryComponents/TradeHistory';
+import TradeHistorySockets from './TradeHistoryComponents/TradeHistorySockets';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,12 +11,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    getProducts();
+
   }
 
   render() {
     return (
-      <p>Hello</p>
+      <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center"}}>
+        <TradeHistorySockets/>
+        {/* <TradeHistory /> */}
+      </div>
     );
   }
 }
