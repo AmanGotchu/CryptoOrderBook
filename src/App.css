@@ -38,7 +38,7 @@
 }
 
 .newRow {
-  animation: green 1s 1 linear
+  animation: green .3s 1 linear
 }
 
 @keyframes green {
@@ -47,7 +47,7 @@
   }
 
   to {
-    background-color: #F2F2F3;
+    background-color: white;
   }
 }
 

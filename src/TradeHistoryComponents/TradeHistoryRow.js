@@ -3,7 +3,7 @@ import '../App.css';
 /* eslint-disable react/prop-types */
 function TradeHistoryRow(props) {
     return(
-        <div className="newRow" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", width: "100%", minHeight: 60, backgroundColor: props.colorValue ? "white" : "#F2F2F3"}}>
+        <div className="newRow" style={{ ...{display: "flex", flexWrap: "wrap", justifyContent: "space-around", width: "100%", minHeight: 60, backgroundColor: props.colorValue ? "white" : "white"}, ...props.style}}>
             <p style={styles.cellStyle}>
                 {props.tradeSize}
             </p>

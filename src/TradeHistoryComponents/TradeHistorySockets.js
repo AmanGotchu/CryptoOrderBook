@@ -55,7 +55,16 @@ class TradeHistorySockets extends React.Component {
             const messageJSON = JSON.parse(message.data);
             if(messageJSON.type == "match") {
                 const tradeTime = new Date(messageJSON.time);
-                const tradeString = tradeTime.getHours() + ":" + tradeTime.getMinutes() + ":" + tradeTime.getSeconds();
+                var hours = tradeTime.getHours() + "";
+                hours.padStart(2, "0");
+
+                var minutes = tradeTime.getMinutes() + "";
+                minutes.padStart(2, "0");
+
+                var seconds = tradeTime.getSeconds() + "";
+                seconds.padStart(2, "0");
+
+                const tradeString = hours + ":" + minutes + ":" + seconds;
 
                 var newTradeData = [<TradeHistoryRow 
                     key={messageJSON.trade_id}
@@ -67,7 +76,6 @@ class TradeHistorySockets extends React.Component {
                 if(newTradeData.length > 100) {
                     newTradeData.splice(100-newTradeData.length);
                 }
-                console.log(newTradeData.length);
                 this.setState({ tradeData: newTradeData })
             }
         };
@@ -127,7 +135,7 @@ class TradeHistorySockets extends React.Component {
   render() {
     return (
       <div style={styles.containerStyle}>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%" }}>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%", backgroundColor: "#d4d4d4" }}>
             {this.state.selectedProduct || "Open Menu"}
           </Button>
           <Menu
@@ -144,6 +152,7 @@ class TradeHistorySockets extends React.Component {
             tradeSize={"Trade Size"}
             tradePrice={"Trade Price"}
             tradeTime={"Trade Time"}
+            style={{ backgroundColor: "#ededed" }}
         />
         <div style={{
             display: "flex",
