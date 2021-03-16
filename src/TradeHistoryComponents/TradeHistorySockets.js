@@ -38,7 +38,7 @@ class TradeHistorySockets extends React.Component {
     .then((res) => {
         return res.data.map((product) => {
             return (
-                <MenuItem onClick={() => this.switchProduct(product.id)} key={product.id}>
+                <MenuItem onClick={() => this.switchProduct(product.id)} key={product.id} style={{ width: 300 }}>
                     {product.id}
                 </MenuItem>
             );
@@ -54,13 +54,20 @@ class TradeHistorySockets extends React.Component {
         client.onmessage = async (message) => {
             const messageJSON = JSON.parse(message.data);
             if(messageJSON.type == "match") {
-                const newTradeData = [<TradeHistoryRow 
-                    key={messageJSON.time}
+                const tradeTime = new Date(messageJSON.time);
+                const tradeString = tradeTime.getHours() + ":" + tradeTime.getMinutes() + ":" + tradeTime.getSeconds();
+
+                var newTradeData = [<TradeHistoryRow 
+                    key={messageJSON.trade_id}
                     tradeSize={messageJSON.size}
                     tradePrice={messageJSON.price}
-                    tradeTime={messageJSON.time}
+                    tradeTime={tradeString}
                 />, ...this.state.tradeData];
-        
+                
+                if(newTradeData.length > 100) {
+                    newTradeData.splice(100-newTradeData.length);
+                }
+                console.log(newTradeData.length);
                 this.setState({ tradeData: newTradeData })
             }
         };
@@ -80,7 +87,11 @@ class TradeHistorySockets extends React.Component {
   }
 
   componentWillUnmount() {
-      
+      client.send(JSON.stringify({
+          "type": "unsubscribe",
+          "product_ids": [this.state.selectedProduct],
+          "channels": ["full"]
+      }))
   }
 
   switchProduct(pair) {
@@ -118,7 +129,7 @@ class TradeHistorySockets extends React.Component {
 
     return (
       <div style={styles.containerStyle}>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ width: "100%" }}>
             {this.state.selectedProduct || "Open Menu"}
           </Button>
           <Menu
@@ -146,7 +157,6 @@ const styles = {
     containerStyle: {
         display: "flex",
         height: 800,
-        border: '2px solid yellow',
         width: "60%",
         flexDirection: "column",
         alignItems: "center",

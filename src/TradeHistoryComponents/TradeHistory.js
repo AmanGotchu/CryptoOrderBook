@@ -114,7 +114,7 @@ class TradeHistory extends React.Component {
 
     return (
       <div style={styles.containerStyle}>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ backgroundColor: "green" }}>
             {this.state.selectedProduct || "Open Menu"}
           </Button>
           <Menu
@@ -123,6 +123,7 @@ class TradeHistory extends React.Component {
             keepMounted
             open={Boolean(this.state.anchorEl)}
             onClose={this.handleClose}
+            style={{ width: 500 }}
             >
             {menuItems}
           </Menu>

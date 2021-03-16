@@ -8,6 +8,12 @@ import TradeHistorySockets from './TradeHistoryComponents/TradeHistorySockets';
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    const { innerWidth: width, innerHeight: height } = window;
+    this.state = {
+      width,
+      height
+    } 
   }
 
   componentDidMount() {
@@ -16,7 +22,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center"}}>
+      <div style={{ display: "flex", width: "100%", height: this.state.height, justifyContent: "center", alignItems: "center"}}>
         <TradeHistorySockets/>
         {/* <TradeHistory /> */}
       </div>

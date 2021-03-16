@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.newRow {
+  animation: green 1s 1 linear
+}
+
+@keyframes green {
+  from {
+    background-color: green;
+  }
+
+  to {
+    background-color: #F2F2F3;
+  }
+}
+
+.buttonWidth {
+  background-color: green;
+}
