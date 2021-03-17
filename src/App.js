@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // import React from 'react';
 // import './App.css';
 // // eslint-disable-next-line no-undef
@@ -132,29 +133,29 @@
 
 
 import React, { useEffect, useState } from "react";
+import { connect } from 'react-redux';
 import './App.css';
 // eslint-disable-next-line no-undef
 // var Buffer = require('buffer/');
 // import TradeHistory from './TradeHistoryComponents/TradeHistory';
 import TradeHistorySockets from './TradeHistoryComponents/TradeHistorySockets';
+import TradeVisual from './TradeVisualizationComponent/TradeVisual';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
-import { Provider } from 'react-redux';
-import store from './redux/store';
 
 import {getProducts} from './coinbase_api/MarketCollector';
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 const client = new W3CWebSocket('wss://ws-feed.pro.coinbase.com');
 
-export default function App() {
+function App(props) {
+  console.log("App: ", props.selectedProduct);
   // const [width, setWidth] = useState(window.width);
   const [height] = useState(window.innerHeight);
   const [trades, setTrades] = useState([]);
-  const [product, setProduct] = useState("BTC-USD");
   const [products, setProducts] = useState([]);
 
   // const [value, setValue] = useState(true);
@@ -193,7 +194,7 @@ export default function App() {
 
       client.send(JSON.stringify({
           "type": "unsubscribe",
-          "product_ids": [product],
+          "product_ids": [props.selectedProduct],
           "channels": ["full"]
       }));
     }
@@ -209,53 +210,38 @@ export default function App() {
     setTrades(prevTrades => {
       const newTradeData = [...prevTrades, newTrade];
       if(newTradeData.length > 100) {
-        newTradeData.splice(100-newTradeData.length);
+        newTradeData.splice(0, newTradeData.length-100);
       }
       return newTradeData;
     });
   }
 
-  const switchProduct = (nextProduct) => {
-    client.send(JSON.stringify({
-      "type": "unsubscribe",
-      "product_ids": [product],
-      "channels": ["full"]
-    }))
-
-    setProduct(nextProduct);
-    setTrades([]);
-
-    // How to run a callback on useState methods
-    client.send(JSON.stringify({
-        "type": "subscribe",
-        "product_ids": [nextProduct],
-        "channels": ["full"]
-    }));
-  }
-
   return (
-    <Provider store={store}>
+    
       <Router>
         <Switch>
+          <Route path="/test">
+            <TradeVisual />
+          </Route>
           <Route path="/">
           <div style={{ display: "flex", width: "100%", height: height, justifyContent: "center", alignItems: "center"}}>
             <TradeHistorySockets
-              selectedProduct={product}
               trades={trades}
               products={products}
-              switchProduct={switchProduct}
             />
             {/* <TradeHistory /> */}
           </div>
           </Route>
-          <Route path="/test">
-            <p>{product}</p>
-          </Route>
-          <Route path="/">
-              <p>Home</p>
-          </Route>
         </Switch>
       </Router>
-    </Provider>
+    
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    selectedProduct: state.trade.selectedProduct
+  }
+}
+
+export default connect(mapStateToProps)(App);

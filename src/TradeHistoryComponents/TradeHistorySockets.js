@@ -7,9 +7,13 @@ import Button from '@material-ui/core/Button';
 import TradeHistoryRow from './TradeHistoryRow';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import { connect } from 'react-redux';
 import '../App.css';
 
-export default function TradeHistorySockets(props) {
+import * as actions from '../redux/actions/tradeActions';
+
+function TradeHistorySockets(props) {
+    console.log("HistorySocket: ", props.selectedProduct);
     const [searchInput, setSearchInput] = useState("");
 
     useEffect(() => {
@@ -20,6 +24,7 @@ export default function TradeHistorySockets(props) {
     const onSearchChange = (evt, product) => {
         console.log(product);
         if(product !== null) {
+            // Dispatch redux action
             props.switchProduct(product.id)
         }
     }
@@ -104,3 +109,14 @@ const styles = {
         justifyContent: "space-between"
     }
 }
+
+
+function mapStateToProps(state) {
+    return {selectedProduct: state.trade.selectedProduct}
+}
+
+const mapDispatchToProps = dispatch => ({
+    switchProduct: (product) => dispatch(actions.dispatchSwitchProduct(product))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(TradeHistorySockets);

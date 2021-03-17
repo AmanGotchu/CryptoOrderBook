@@ -1,16 +1,15 @@
 // import axios from 'axios';
 
-export function addTrade(tradeData) {
-    return {
-        type: 'TRADE_ADD',
-        data: tradeData
-    }
-}
-
 export function switchProduct(product) {
     return {
         type: 'PRODUCT_SWITCH',
         data: product
+    }
+}
+
+export function dispatchSwitchProduct(product) {
+    return dispatch => {
+        dispatch(switchProduct(product))
     }
 }
 
