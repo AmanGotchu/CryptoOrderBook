@@ -237,7 +237,7 @@ export default function App() {
     <Provider store={store}>
       <Router>
         <Switch>
-          <Route path="/trades">
+          <Route path="/">
           <div style={{ display: "flex", width: "100%", height: height, justifyContent: "center", alignItems: "center"}}>
             <TradeHistorySockets
               selectedProduct={product}
